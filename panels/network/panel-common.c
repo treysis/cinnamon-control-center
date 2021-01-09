@@ -575,6 +575,13 @@ panel_get_ip6_address_as_string (NMIPConfig *ip6_config)
         return g_strdup (nm_ip_address_get_address (address));
 }
 
+gchar *
+panel_get_ip6_dns_as_string (NMIPConfig *ip6_config)
+{
+        return g_strjoinv (" ",
+                           (char **) nm_ip_config_get_nameservers (ip6_config));
+}
+
 void
 panel_set_device_widgets (GtkBuilder *builder, NMDevice *device)
 {
@@ -632,21 +639,48 @@ panel_set_device_widgets (GtkBuilder *builder, NMDevice *device)
         ip6_config = nm_device_get_ip6_config (device);
         if (ip6_config != NULL) {
                 str_tmp = panel_get_ip6_address_as_string (ip6_config);
-                panel_set_device_widget_details (builder, "ipv6", str_tmp);
+                panel_set_device_widget_details (builder,
+                                                 "ipv6",
+                                                 str_tmp);
                 has_ip6 = str_tmp != NULL;
                 g_free (str_tmp);
+
+                /* IPv6 DNS */
+                str_tmp = panel_get_ip6_dns_as_string (ip6_config);
+                panel_set_device_widget_details (builder,
+                                                 "dns6",
+                                                 str_tmp);
+                g_free (str_tmp);
+
         } else {
-                panel_set_device_widget_details (builder, "ipv6", NULL);
+                panel_set_device_widget_details (builder,
+                                                 "ipv6",
+                                                 NULL);
                 has_ip6 = FALSE;
+
+                /* IPv6 DNS */
+                panel_set_device_widget_details (builder,
+                                                 "dns6",
+                                                 NULL);
         }
 
         if (has_ip4 && has_ip6) {
                 panel_set_device_widget_header (builder, "ipv4", _("IPv4 Address"));
                 panel_set_device_widget_header (builder, "ipv6", _("IPv6 Address"));
+                panel_set_device_widget_header (builder, "dns", _("DNS4"));
+                panel_set_device_widget_header (builder, "dns6", _("DNS6"));
         } else if (has_ip4) {
                 panel_set_device_widget_header (builder, "ipv4", _("IP Address"));
+                panel_set_device_widget_header (builder, "dns", _("DNS"));
+
+                /* Hide IPv6 parameters */
+                panel_set_device_widget_details (builder, "dns6", NULL);
         } else if (has_ip6) {
                 panel_set_device_widget_header (builder, "ipv6", _("IP Address"));
+                panel_set_device_widget_header (builder, "dns6", _("DNS"));
+
+                /* Hide IPv4 parameters */
+                panel_set_device_widget_details (builder, "dns", NULL);
         }
 }
 
@@ -656,5 +690,6 @@ panel_unset_device_widgets (GtkBuilder *builder)
         panel_set_device_widget_details (builder, "ipv4", NULL);
         panel_set_device_widget_details (builder, "ipv6", NULL);
         panel_set_device_widget_details (builder, "dns", NULL);
+        panel_set_device_widget_details (builder, "dns6", NULL);
         panel_set_device_widget_details (builder, "route", NULL);
 }

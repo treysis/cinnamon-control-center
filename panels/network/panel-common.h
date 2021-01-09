@@ -49,6 +49,7 @@ void             panel_unset_device_widgets                    (GtkBuilder *buil
 gchar           *panel_get_ip4_address_as_string               (NMIPConfig *config, const gchar *what);
 gchar           *panel_get_ip4_dns_as_string                   (NMIPConfig *config);
 gchar           *panel_get_ip6_address_as_string               (NMIPConfig *config);
+gchar           *panel_get_ip6_dns_as_string                   (NMIPConfig *config);
 
 G_END_DECLS
 

@@ -558,8 +558,13 @@ out:
 gchar *
 panel_get_ip4_dns_as_string (NMIPConfig *ip4_config)
 {
-        return g_strjoinv (" ",
-                           (char **) nm_ip_config_get_nameservers (ip4_config));
+        const char *const *arrc;
+
+        arrc = nm_ip_config_get_nameservers (ip4_config);
+        if (*arrc != NULL)
+                return g_strjoinv (" ", (char **) arrc);
+
+        return NULL;
 }
 
 gchar *
@@ -578,8 +583,13 @@ panel_get_ip6_address_as_string (NMIPConfig *ip6_config)
 gchar *
 panel_get_ip6_dns_as_string (NMIPConfig *ip6_config)
 {
-        return g_strjoinv (" ",
-                           (char **) nm_ip_config_get_nameservers (ip6_config));
+        const char *const *arrc;
+
+        arrc = nm_ip_config_get_nameservers (ip6_config);
+        if (*arrc != NULL)
+                return g_strjoinv (" ", (char **) arrc);
+
+        return NULL;
 }
 
 void
@@ -672,15 +682,9 @@ panel_set_device_widgets (GtkBuilder *builder, NMDevice *device)
         } else if (has_ip4) {
                 panel_set_device_widget_header (builder, "ipv4", _("IP Address"));
                 panel_set_device_widget_header (builder, "dns", _("DNS"));
-
-                /* Hide IPv6 parameters */
-                panel_set_device_widget_details (builder, "dns6", NULL);
         } else if (has_ip6) {
                 panel_set_device_widget_header (builder, "ipv6", _("IP Address"));
                 panel_set_device_widget_header (builder, "dns6", _("DNS"));
-
-                /* Hide IPv4 parameters */
-                panel_set_device_widget_details (builder, "dns", NULL);
         }
 }
 

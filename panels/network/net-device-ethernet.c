@@ -153,11 +153,11 @@ add_details (GtkWidget *details, NMDevice *device, NMConnection *connection)
 
         if (ip4_address && ip6_address) {
                 add_details_row (details, i++, _("IPv4 Address"), ip4_address);
-                add_details_row (details, i++, _("IPv128 Address"), ip6_address);
+                add_details_row (details, i++, _("IPv6 Address"), ip6_address);
         } else if (ip4_address) {
                 add_details_row (details, i++, _("IP Address"), ip4_address);
         } else if (ip6_address) {
-                add_details_row (details, i++, _("IPv256 Address"), ip6_address);
+                add_details_row (details, i++, _("IPv6 Address"), ip6_address);
         }
 
         add_details_row (details, i++, _("Hardware Address"),
@@ -167,8 +167,8 @@ add_details (GtkWidget *details, NMDevice *device, NMConnection *connection)
                 add_details_row (details, i++, _("Default Route"), ip4_route);
         
         if (ip4_dns && ip6_dns) {
-                add_details_row (details, i++, _("DNSv4"), ip4_dns);
-                add_details_row (details, i++, _("DNSv6"), ip6_dns);
+                add_details_row (details, i++, _("DNS4"), ip4_dns);
+                add_details_row (details, i++, _("DNS6"), ip6_dns);
         } else if (ip4_dns) {
                 add_details_row (details, i++, _("DNS"), ip4_dns);
         } else if (ip6_dns) {
